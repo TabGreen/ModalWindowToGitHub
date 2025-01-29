@@ -4,34 +4,34 @@ class MWToGitHub{
         if(!modalWindow){
             //MainEl
             modalWindow = document.createElement('div');
-            modalWindow.hidden = true;
+            modalWindow.hidden = false;
             modalWindow.id = mwToGitHub.MW_ID;
             //imgEl
             let imgEl = document.createElement('img');
-            imgEl.class = mwToGitHub.IMG_class;
+            imgEl.classList.add(mwToGitHub.IMG_class);
             mwToGitHub.IMG_EL = imgEl;
             //text_main
             let textEl = document.createElement('p');
             textEl.innerText = mwToGitHub.text;
             //text_userNameEl
             let userNameEl = document.createElement('span');
-            userNameEl.class = mwToGitHub.GitHubUserNameElClass;
+            userNameEl.classList.add(mwToGitHub.GitHubUserNameElClass);
             mwToGitHub.GitHubUserNameEl = userNameEl;
             //data_labelEl
             let data_labelEl = document.createElement('p');
-
+            data_labelEl.classList.add(mwToGitHub.data_labelClass);
 
             let data_label_public_reposEl = document.createElement('span');
             data_label_public_reposEl.innerText = mwToGitHub.public_repos_label;
-            data_label_public_reposEl.class = mwToGitHub.public_reposElClass;
+            data_label_public_reposEl.classList.add(mwToGitHub.public_reposElClass);
 
             let data_label_followersEl = document.createElement('span');
-            data_label_public_reposEl.innerText = mwToGitHub.followers_label;
-            data_label_followersEl.class = mwToGitHub.followersElClass;
+            data_label_followersEl.innerText = mwToGitHub.followers_label;
+            data_label_followersEl.classList.add(mwToGitHub.followersElClass);
 
             let data_label_followingEl = document.createElement('span');
             data_label_followingEl.innerText = mwToGitHub.following_label;
-            data_label_followingEl.class = mwToGitHub.followingElClass;
+            data_label_followingEl.classList.add(mwToGitHub.followingElClass);
 
 
             data_labelEl.appendChild(data_label_public_reposEl);
@@ -39,18 +39,18 @@ class MWToGitHub{
             data_labelEl.appendChild(data_label_followingEl);
             //dataEl
             let dataEl = document.createElement('p');
-            dataEl.class = mwToGitHub.dataElClass;
+            dataEl.classList.add(mwToGitHub.dataElClass);
 
             let public_reposEl = document.createElement('span');
-            public_reposEl.class = mwToGitHub.public_reposElClass;
+            public_reposEl.classList.add(mwToGitHub.public_reposElClass);
             public_reposEl.innerText = '';
 
             let followersEl = document.createElement('span');
-            followersEl.class = mwToGitHub.followersElClass;
+            followersEl.classList.add(mwToGitHub.followersElClass);
             followersEl.innerText = '';
 
             let followingEl = document.createElement('span');
-            followingEl.class = mwToGitHub.followingElClass;
+            followingEl.classList.add(mwToGitHub.followingElClass);
             followingEl.innerText = '';
 
             dataEl.appendChild(public_reposEl);
@@ -62,7 +62,7 @@ class MWToGitHub{
             mwToGitHub.followingEl = followingEl;
             //bioEl
             let bioEl = document.createElement('p');
-            bioEl.class = mwToGitHub.bioElClass;
+            bioEl.classList.add(mwToGitHub.bioElClass);
             bioEl.innerText = '';
 
             mwToGitHub.bioEl = bioEl;
@@ -73,26 +73,6 @@ class MWToGitHub{
             modalWindow.appendChild(data_labelEl);
             modalWindow.appendChild(dataEl);
             modalWindow.appendChild(bioEl);
-            /*
-            大致结构
-            <div id="ModalWindowToGitHub">
-                <img class="github-user-img"></img>
-                <p>
-                    <span class="github-user-name"></span>
-                </p>
-                <p class='data-label'>
-                    <span class="public_repos"></span>
-                    <span class="followers"></span>
-                    <span class="following"></span>
-                </p>
-                <p class='data'>
-                    <span class="public_repos"></span>
-                    <span class="followers"></span>
-                    <span class="following"></span>
-                </p>
-                <p class='bio'></p>
-            </div>
-            */
         }
         return modalWindow;
     }
@@ -144,6 +124,7 @@ const mwToGitHub = {
     bioEl:null,
 };
 const mwToGitHub_ajaxData = {
+    isLoaded:false,
     IMG_URL:null,
     public_repos:null,
     followers:null,
@@ -152,3 +133,28 @@ const mwToGitHub_ajaxData = {
 }
 mwToGitHub.EL = MWToGitHub.getModalWindow();
 mwToGitHub.GitHubUserName = MWToGitHub.getGitHubUserName();
+mwToGitHub.GitHubUserNameEl.innerText = mwToGitHub.GitHubUserName;
+
+if(document.readyState === 'loading'){window.addEventListener(
+'DOMContentLoaded',()=>{document.body.appendChild(mwToGitHub.EL
+);})}else{document.body.appendChild(mwToGitHub.EL);}
+/*
+    大致结构
+    <div id="ModalWindowToGitHub">
+        <img class="github-user-img"></img>
+        <p>
+            <span class="github-user-name"></span>
+        </p>
+        <p class='data-label'>
+            <span class="public_repos"></span>
+            <span class="followers"></span>
+            <span class="following"></span>
+        </p>
+        <p class='data'>
+            <span class="public_repos"></span>
+            <span class="followers"></span>
+            <span class="following"></span>
+        </p>
+        <p class='bio'></p>
+    </div>
+*/
