@@ -4,11 +4,12 @@ class MWToGitHub{
         if(!modalWindow){
             //MainEl
             modalWindow = document.createElement('div');
-            modalWindow.hidden = false;
+            modalWindow.hidden = false;//⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️
             modalWindow.id = mwToGitHub.MW_ID;
             //imgEl
             let imgEl = document.createElement('img');
             imgEl.classList.add(mwToGitHub.IMG_class);
+            imgEl.draggable = false;
             mwToGitHub.IMG_EL = imgEl;
             //text_main
             let textEl = document.createElement('p');
@@ -94,6 +95,31 @@ class MWToGitHub{
         =meta.name.toLowerCase();if(metaName.includes('github')){userName
         =meta.getAttribute('content');}}return userName;
     }
+    static async getGitHubUserData(){
+        const GitHubAPI = 'https://api.github.com/users/';
+        if(!mwToGitHub.GitHubUserName){console.log('请求数据:无用户名');return;}
+        let url = GitHubAPI+mwToGitHub.GitHubUserName;
+        let reponse = await fetch(url);
+        let data = await reponse.json();
+        //添加数据
+        mwToGitHub_ajaxData.IMG_URL = data.avatar_url;
+        mwToGitHub_ajaxData.public_repos = data.public_repos;
+        mwToGitHub_ajaxData.followers = data.followers;
+        mwToGitHub_ajaxData.following = data.following;
+        mwToGitHub_ajaxData.bio = data.bio;
+        //更改DOM
+        if(document.readyState == "complete")
+        {this.addDataToElement();}else{document.
+        addEventListener("DOMContentLoaded",this
+        .addDataToElement())}
+    }
+    static addDataToElement(){
+        mwToGitHub.IMG_EL.src = mwToGitHub_ajaxData.IMG_URL;
+        mwToGitHub.public_reposEl.innerHTML = mwToGitHub_ajaxData.public_repos;
+        mwToGitHub.followersEl.innerHTML = mwToGitHub_ajaxData.followers;
+        mwToGitHub.followingEl.innerHTML = mwToGitHub_ajaxData.following;
+        mwToGitHub.bioEl.innerHTML = mwToGitHub_ajaxData.bio;
+    }
 }
 const mwToGitHub = {
     MW_ID:'ModalWindowToGitHub',
@@ -158,3 +184,4 @@ if(document.readyState === 'loading'){window.addEventListener(
         <p class='bio'></p>
     </div>
 */
+MWToGitHub.getGitHubUserData();
