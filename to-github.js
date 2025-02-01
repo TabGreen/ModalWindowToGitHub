@@ -61,6 +61,12 @@ class MWToGitHub{
             mwToGitHub.public_reposEl = public_reposEl;
             mwToGitHub.followersEl = followersEl;
             mwToGitHub.followingEl = followingEl;
+
+            //data_tableEl
+            let data_tableEl = document.createElement('div');
+            data_tableEl.classList.add(mwToGitHub.data_tableElClass);
+            data_tableEl.appendChild(data_labelEl);
+            data_tableEl.appendChild(dataEl);
             //bioEl
             let bioEl = document.createElement('p');
             bioEl.classList.add(mwToGitHub.bioElClass);
@@ -71,12 +77,22 @@ class MWToGitHub{
             modalWindow.appendChild(imgEl);
             textEl.appendChild(userNameEl);
             modalWindow.appendChild(textEl);
-            modalWindow.appendChild(data_labelEl);
-            modalWindow.appendChild(dataEl);
+            modalWindow.appendChild(data_tableEl);
             modalWindow.appendChild(bioEl);
         }
         return modalWindow;
     }
+    static getStartButton(){
+        let startButton = document.getElementById(mwToGitHub.MW_button_ID);
+        if(!startButton){
+            //MainEl
+            startButton = document.createElement('button');
+            startButton.id = mwToGitHub.MW_button_ID;
+            startButton.addEventListener('click',MWToGitHub.handleButtonClick);
+        }
+        return startButton;
+    }
+    static handleButtonClick(){/**/}
     static getGitHubUserName(){//压缩来自FastLinkToGitHub
         let userName = undefined;
         //方案1:meta[name='author'content='github@userName']
@@ -102,6 +118,8 @@ class MWToGitHub{
         let reponse = await fetch(url);
         let data = await reponse.json();
         //添加数据
+        //mwToGitHub_ajaxData.GitHubLoginUserName = data.login;
+        mwToGitHub_ajaxData.GitHubUser_public_name = data.name;
         mwToGitHub_ajaxData.IMG_URL = data.avatar_url;
         mwToGitHub_ajaxData.public_repos = data.public_repos;
         mwToGitHub_ajaxData.followers = data.followers;
@@ -112,8 +130,10 @@ class MWToGitHub{
         {this.addDataToElement();}else{document.
         addEventListener("DOMContentLoaded",this
         .addDataToElement())}
+        mwToGitHub.isLoaded = true;
     }
     static addDataToElement(){
+        mwToGitHub.GitHubUserNameEl.innerText = mwToGitHub_ajaxData.GitHubUser_public_name;
         mwToGitHub.IMG_EL.src = mwToGitHub_ajaxData.IMG_URL;
         mwToGitHub.public_reposEl.innerHTML = mwToGitHub_ajaxData.public_repos;
         mwToGitHub.followersEl.innerHTML = mwToGitHub_ajaxData.followers;
@@ -122,6 +142,7 @@ class MWToGitHub{
     }
 }
 const mwToGitHub = {
+    MW_button_ID:'ModalWindowToGitHubButton',
     MW_ID:'ModalWindowToGitHub',
     IMG_class:'github-user-img',
     GitHubUserNameElClass:'github-user-name',
@@ -133,6 +154,7 @@ const mwToGitHub = {
     following_label:'关注者',
 
     dataElClass:'data',
+    data_tableElClass:'data-tabel',
     public_reposElClass:'public_repos',
     followersElClass:'followers',
     followingElClass:'following',
@@ -151,6 +173,7 @@ const mwToGitHub = {
 };
 const mwToGitHub_ajaxData = {
     isLoaded:false,
+    GitHubUser_public_name:null,
     IMG_URL:null,
     public_repos:null,
     followers:null,
@@ -159,7 +182,6 @@ const mwToGitHub_ajaxData = {
 }
 mwToGitHub.EL = MWToGitHub.getModalWindow();
 mwToGitHub.GitHubUserName = MWToGitHub.getGitHubUserName();
-mwToGitHub.GitHubUserNameEl.innerText = mwToGitHub.GitHubUserName;
 
 if(document.readyState === 'loading'){window.addEventListener(
 'DOMContentLoaded',()=>{document.body.appendChild(mwToGitHub.EL
