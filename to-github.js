@@ -4,10 +4,11 @@ class MWToGitHub{
         if(!modalWindow){
             //MainEl
             modalWindow = document.createElement('div');
-            modalWindow.hidden = false;//⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️
+            modalWindow.classList.add('hide');
             modalWindow.id = mwToGitHub.MW_ID;
             //imgEl
             let imgEl = document.createElement('img');
+            imgEl.alt = 'GitHubUserAvatar';
             imgEl.classList.add(mwToGitHub.IMG_class);
             imgEl.draggable = false;
             mwToGitHub.IMG_EL = imgEl;
@@ -73,13 +74,28 @@ class MWToGitHub{
             bioEl.innerText = '';
 
             mwToGitHub.bioEl = bioEl;
+            //msgEl
+            let msgEl = document.createElement('p');
+            msgEl.classList.add(mwToGitHub.msgEl_class);
+            msgEl.innerText = '正在从GitHub加载数据';
+            mwToGitHub.msgEl = msgEl;
+            //close_buttonEl
+            let close_buttonEl = document.createElement('button');
+            close_buttonEl.setAttribute('type','button');
+            close_buttonEl.classList.add(mwToGitHub.close_buttonElClass);
+            close_buttonEl.addEventListener('click',MWToGitHub.handleCloseButtonClick);
+            close_buttonEl.innerText = '关闭';
+            mwToGitHub.close_buttonEl = close_buttonEl;
             //
             modalWindow.appendChild(imgEl);
             textEl.appendChild(userNameEl);
             modalWindow.appendChild(textEl);
             modalWindow.appendChild(data_tableEl);
             modalWindow.appendChild(bioEl);
+            modalWindow.appendChild(msgEl);
+            modalWindow.appendChild(close_buttonEl);
         }
+        modalWindow.classList.add('msg');//只显示消息
         return modalWindow;
     }
     static getStartButton(){
@@ -87,12 +103,30 @@ class MWToGitHub{
         if(!startButton){
             //MainEl
             startButton = document.createElement('button');
+            startButton.setAttribute('type','button');
             startButton.id = mwToGitHub.MW_button_ID;
             startButton.addEventListener('click',MWToGitHub.handleButtonClick);
+            //imageEl
+            let imageEl = document.createElement('img');
+            imageEl.alt = 'GitHubICON';
+            imageEl.src = mwToGitHub.GitHubICON_URL;
+            imageEl.draggable = false;
+            startButton.appendChild(imageEl);
         }
         return startButton;
     }
-    static handleButtonClick(){/**/}
+    static handleButtonClick(){
+        mwToGitHub.startButtonEl.disabled = true;
+        mwToGitHub.close_buttonEl.disabled = false;
+        mwToGitHub.EL.classList.remove('hide');
+        mwToGitHub.startButtonEl.classList.add('hide');
+    }
+    static handleCloseButtonClick(){
+        mwToGitHub.close_buttonEl.disabled = true;
+        mwToGitHub.startButtonEl.disabled = false;
+        mwToGitHub.EL.classList.add('hide');
+        mwToGitHub.startButtonEl.classList.remove('hide');
+    }
     static getGitHubUserName(){//压缩来自FastLinkToGitHub
         let userName = undefined;
         //方案1:meta[name='author'content='github@userName']
@@ -113,9 +147,20 @@ class MWToGitHub{
     }
     static async getGitHubUserData(){
         const GitHubAPI = 'https://api.github.com/users/';
-        if(!mwToGitHub.GitHubUserName){console.log('请求数据:无用户名');return;}
+        //用户名错误
+        if(!mwToGitHub.GitHubUserName){
+            console.log('请求数据:无用户名');
+            mwToGitHub.msgEl.innerText = '无用户名';
+            return;
+        }
         let url = GitHubAPI+mwToGitHub.GitHubUserName;
         let reponse = await fetch(url);
+        //网络错误
+        if(!reponse.ok){
+            console.log('请求数据:网络错误');
+            mwToGitHub.msgEl.innerText = '网络错误';
+            return;
+        }
         let data = await reponse.json();
         //添加数据
         //mwToGitHub_ajaxData.GitHubLoginUserName = data.login;
@@ -130,7 +175,6 @@ class MWToGitHub{
         {this.addDataToElement();}else{document.
         addEventListener("DOMContentLoaded",this
         .addDataToElement())}
-        mwToGitHub.isLoaded = true;
     }
     static addDataToElement(){
         mwToGitHub.GitHubUserNameEl.innerText = mwToGitHub_ajaxData.GitHubUser_public_name;
@@ -139,9 +183,17 @@ class MWToGitHub{
         mwToGitHub.followersEl.innerHTML = mwToGitHub_ajaxData.followers;
         mwToGitHub.followingEl.innerHTML = mwToGitHub_ajaxData.following;
         mwToGitHub.bioEl.innerHTML = mwToGitHub_ajaxData.bio;
+        mwToGitHub.isLoaded = true;
+        mwToGitHub.msgEl.innerText = '加载完成';
+        mwToGitHub.EL.classList.remove('msg');
+    }
+    static addElsToDOM(){
+        document.body.appendChild(mwToGitHub.EL);
+        document.body.appendChild(mwToGitHub.startButtonEl);
     }
 }
 const mwToGitHub = {
+    GitHubICON_URL:'https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png',
     MW_button_ID:'ModalWindowToGitHubButton',
     MW_ID:'ModalWindowToGitHub',
     IMG_class:'github-user-img',
@@ -159,9 +211,12 @@ const mwToGitHub = {
     followersElClass:'followers',
     followingElClass:'following',
     bioElClass:'bio',
+    msgEl_class:'msgbox',
+    close_buttonElClass:'close-button',
 
     GitHubUserName:undefined,
 
+    startButtonEl:null,
     EL:null,
     IMG_EL:null,
     GitHubUserNameEl:null,
@@ -170,6 +225,8 @@ const mwToGitHub = {
     followersEl:null,
     followingEl:null,
     bioEl:null,
+    msgEl:null,
+    close_buttonEl:null,
 };
 const mwToGitHub_ajaxData = {
     isLoaded:false,
@@ -181,11 +238,13 @@ const mwToGitHub_ajaxData = {
     bio:null,
 }
 mwToGitHub.EL = MWToGitHub.getModalWindow();
+mwToGitHub.startButtonEl = MWToGitHub.getStartButton();
 mwToGitHub.GitHubUserName = MWToGitHub.getGitHubUserName();
 
-if(document.readyState === 'loading'){window.addEventListener(
-'DOMContentLoaded',()=>{document.body.appendChild(mwToGitHub.EL
-);})}else{document.body.appendChild(mwToGitHub.EL);}
+if(document.readyState === 'loading')
+{window.addEventListener('DOMContentLoaded',
+MWToGitHub.addElsToDOM)}else{MWToGitHub.
+addElsToDOM();}
 /*
     大致结构
     <div id="ModalWindowToGitHub">
@@ -193,17 +252,19 @@ if(document.readyState === 'loading'){window.addEventListener(
         <p>
             <span class="github-user-name"></span>
         </p>
-        <p class='data-label'>
-            <span class="public_repos"></span>
-            <span class="followers"></span>
-            <span class="following"></span>
-        </p>
-        <p class='data'>
-            <span class="public_repos"></span>
-            <span class="followers"></span>
-            <span class="following"></span>
-        </p>
-        <p class='bio'></p>
+        <div class="data-tabel">
+            <p class='data-label'>
+                <span class="public_repos"></span>
+                <span class="followers"></span>
+                <span class="following"></span>
+            </p>
+            <p class='data'>
+                <span class="public_repos"></span>
+                <span class="followers"></span>
+                <span class="following"></span>
+            </p>
+            <p class='bio'></p>
+        </div>
     </div>
 */
 MWToGitHub.getGitHubUserData();

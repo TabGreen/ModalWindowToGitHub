@@ -1,3 +1,6 @@
+#ModalWindowToGitHubButton{
+    position: fixed;
+}
 #ModalWindowToGitHub{
     background-color: white;
 
@@ -31,8 +34,6 @@
     white-space: nowrap;
 }
 #ModalWindowToGitHub p.data-label span{
-    border-left: 0.05em solid #888;
-    border-right: 0.05em solid #888;
 
     padding: 0 3%;
 
@@ -40,10 +41,12 @@
     white-space: nowrap;
 }
 #ModalWindowToGitHub p.data-label :first-child{
+    border-right: 0.1em solid #888;
     border-left:none;
     padding-left:0;
 }
 #ModalWindowToGitHub p.data-label :last-child{
+    border-left: 0.1em solid #888;
     border-right:none;
     padding-right:0;
 }
@@ -77,4 +80,59 @@
 #ModalWindowToGitHub p.bio{
     font-size: 75%;
     border-top: 1px solid #888;
+}
+
+#ModalWindowToGitHubButton{
+    cursor: pointer;
+    position: fixed;
+
+    top:1.5em;
+    right:1.5em;
+
+    width: 50px;
+    height: 50px;
+
+    background-color: white;
+
+    border: 0.28em solid #888;
+    border-radius: 10px;
+
+    transition: top 0.5s;
+}
+#ModalWindowToGitHubButton:hover{
+    border-color: #666;
+}
+#ModalWindowToGitHubButton.hide{
+    top: -100%;
+}
+#ModalWindowToGitHubButton img{
+    width: 100%;
+    height: auto;
+}
+
+#ModalWindowToGitHub{
+    top:2em;
+    right:2em;
+
+    transition: right 0.5s;
+}
+#ModalWindowToGitHub.hide{
+    right:-100%;
+}
+
+#ModalWindowToGitHub:not(.msg) .msgbox{
+    display: none;
+}
+#ModalWindowToGitHub.msg *:not(.msgbox){
+    display: none;
+}
+#ModalWindowToGitHub .close-button{
+    cursor: pointer;
+
+    position: absolute;
+    top: 0;
+    right: 0;
+
+    border: none;
+    background-color: transparent;
 }
