@@ -18,6 +18,7 @@ class MWToGitHub{
             //text_userNameEl
             let userNameEl = document.createElement('span');
             userNameEl.classList.add(mwToGitHub.GitHubUserNameElClass);
+            userNameEl.addEventListener('click',MWToGitHub.jumpToGitHubPage);
             mwToGitHub.GitHubUserNameEl = userNameEl;
             //data_labelEl
             let data_labelEl = document.createElement('p');
@@ -84,7 +85,7 @@ class MWToGitHub{
             close_buttonEl.setAttribute('type','button');
             close_buttonEl.classList.add(mwToGitHub.close_buttonElClass);
             close_buttonEl.addEventListener('click',MWToGitHub.handleCloseButtonClick);
-            close_buttonEl.innerText = '关闭';
+            close_buttonEl.innerText = '❌';
             mwToGitHub.close_buttonEl = close_buttonEl;
             //
             modalWindow.appendChild(imgEl);
@@ -191,8 +192,13 @@ class MWToGitHub{
         document.body.appendChild(mwToGitHub.EL);
         document.body.appendChild(mwToGitHub.startButtonEl);
     }
+    static jumpToGitHubPage(){
+        let url = mwToGitHub.GitHub_Doman+mwToGitHub.GitHubUserName;
+        window.open(url);
+    }
 }
 const mwToGitHub = {
+    GitHub_Doman:'https://github.com/',
     GitHubICON_URL:'https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png',
     MW_button_ID:'ModalWindowToGitHubButton',
     MW_ID:'ModalWindowToGitHub',
