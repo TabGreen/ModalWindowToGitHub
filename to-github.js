@@ -83,9 +83,40 @@ class MWToGitHub{
             //close_buttonEl
             let close_buttonEl = document.createElement('button');
             close_buttonEl.setAttribute('type','button');
+            close_buttonEl.title = '关闭';
             close_buttonEl.classList.add(mwToGitHub.close_buttonElClass);
             close_buttonEl.addEventListener('click',MWToGitHub.handleCloseButtonClick);
-            close_buttonEl.innerText = '❌';
+                //“关闭”图片
+                //创建SVG元素
+let svgNS = "http://www.w3.org/2000/svg";
+let svg = document.createElementNS(svgNS, 'svg');
+svg.setAttribute('width', '24');
+svg.setAttribute('height', '24');
+svg.setAttribute('viewBox', '0 0 24 24');
+svg.setAttribute('fill', 'none');
+svg.setAttribute('stroke', 'currentColor');
+svg.setAttribute('stroke-width', '2');
+svg.setAttribute('stroke-linecap', 'round');
+svg.setAttribute('stroke-linejoin', 'round');
+
+// 创建第一条线
+var line1 = document.createElementNS(svgNS, 'line');
+line1.setAttribute('x1', '18');
+line1.setAttribute('y1', '6');
+line1.setAttribute('x2', '6');
+line1.setAttribute('y2', '18');
+
+// 创建第二条线
+var line2 = document.createElementNS(svgNS, 'line');
+line2.setAttribute('x1', '6');
+line2.setAttribute('y1', '6');
+line2.setAttribute('x2', '18');
+line2.setAttribute('y2', '18');
+
+// 将线条添加到SVG中
+svg.appendChild(line1);
+svg.appendChild(line2);
+            close_buttonEl.appendChild(svg);
             mwToGitHub.close_buttonEl = close_buttonEl;
             //
             modalWindow.appendChild(imgEl);
@@ -155,17 +186,18 @@ class MWToGitHub{
             return;
         }
         let url = GitHubAPI+mwToGitHub.GitHubUserName;
-        let reponse = await fetch(url);
+        let response = await fetch(url);
         //网络错误
-        if(!reponse.ok){
+        if(!response.ok){
             console.log('请求数据:网络错误');
-            mwToGitHub.msgEl.innerText = '网络错误';
+            mwToGitHub.msgEl.innerText = `向${response.url}请求时发生了${response.status}错误    ${response.statusText}`;
             return;
         }
-        let data = await reponse.json();
+        let data = await response.json();
         //添加数据
         //mwToGitHub_ajaxData.GitHubLoginUserName = data.login;
-        mwToGitHub_ajaxData.GitHubUser_public_name = data.name;
+        //mwToGitHub_ajaxData.GitHubUser_public_name = data.name;
+        mwToGitHub_ajaxData.used_name = data.name||data.login;
         mwToGitHub_ajaxData.IMG_URL = data.avatar_url;
         mwToGitHub_ajaxData.public_repos = data.public_repos;
         mwToGitHub_ajaxData.followers = data.followers;
@@ -178,7 +210,7 @@ class MWToGitHub{
         .addDataToElement())}
     }
     static addDataToElement(){
-        mwToGitHub.GitHubUserNameEl.innerText = mwToGitHub_ajaxData.GitHubUser_public_name;
+        mwToGitHub.GitHubUserNameEl.innerText = mwToGitHub_ajaxData.used_name;
         mwToGitHub.IMG_EL.src = mwToGitHub_ajaxData.IMG_URL;
         mwToGitHub.public_reposEl.innerHTML = mwToGitHub_ajaxData.public_repos;
         mwToGitHub.followersEl.innerHTML = mwToGitHub_ajaxData.followers;
@@ -195,6 +227,10 @@ class MWToGitHub{
     static jumpToGitHubPage(){
         let url = mwToGitHub.GitHub_Doman+mwToGitHub.GitHubUserName;
         window.open(url);
+    }
+
+    static clearButton(){//双击按钮时(永远)隐藏按钮
+        mwToGitHub.startButtonEl.classList.add('clear');
     }
 }
 const mwToGitHub = {
@@ -236,7 +272,7 @@ const mwToGitHub = {
 };
 const mwToGitHub_ajaxData = {
     isLoaded:false,
-    GitHubUser_public_name:null,
+    used_name:null,
     IMG_URL:null,
     public_repos:null,
     followers:null,
@@ -274,3 +310,11 @@ addElsToDOM();}
     </div>
 */
 MWToGitHub.getGitHubUserData();
+
+
+mwToGitHub.startButtonEl.addEventListener('contextmenu',(e)=>{e.preventDefault()});
+mwToGitHub.startButtonEl.addEventListener('mousedown',(e)=>{
+    if(e.button == 2){//按下控制键
+        MWToGitHub.clearButton();
+    }
+});

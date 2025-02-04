@@ -103,12 +103,14 @@
     border: 0.28em solid #888;
     border-radius: 10px;
 
-    transition: top 0.5s;
+    opacity: 1;
+    transition: opacity 0.5s,top 0.5s;
 }
 #ModalWindowToGitHubButton:hover{
     border-color: #666;
 }
 #ModalWindowToGitHubButton.hide{
+    opacity: 0;
     top: -100%;
 }
 #ModalWindowToGitHubButton img{
@@ -120,16 +122,18 @@
     top:2em;
     right:2em;
 
-    transition: right 0.5s;
+    opacity: 1;
+    transition: opacity 0.5s ,right 0.5s;
 }
 #ModalWindowToGitHub.hide{
+    opacity: 0;
     right:-100%;
 }
 
 #ModalWindowToGitHub:not(.msg) .msgbox{
     display: none;
 }
-#ModalWindowToGitHub.msg *:not(.msgbox){
+#ModalWindowToGitHub.msg *:not(.msgbox,.close-button){
     display: none;
 }
 #ModalWindowToGitHub .close-button{
@@ -141,4 +145,10 @@
 
     border: none;
     background-color: transparent;
+}
+
+
+
+#ModalWindowToGitHubButton.clear{
+    opacity: 0;
 }
