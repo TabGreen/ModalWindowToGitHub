@@ -14,7 +14,7 @@
     text-align: center;
 
     font-size: 1.5em;
-    width: 300px;
+    width: 300px;/*下方有依赖于此宽度的渐变,如需修改宽度,请一起更改*/
 }
 #ModalWindowToGitHub .github-user-img{
     margin-top: 5%;
@@ -95,7 +95,7 @@
     top:1.5em;
     right:1.5em;
 
-    width: 50px;
+    width: 50px;/*下方有依赖于此宽度的渐变,如需修改宽度,请一起更改*/
     height: 50px;
 
     background-color: white;
@@ -104,14 +104,14 @@
     border-radius: 10px;
 
     opacity: 1;
-    transition: opacity 0.5s,top 0.5s;
+    transition: all 777ms ease-in-out;
 }
 #ModalWindowToGitHubButton:hover{
     border-color: #666;
 }
 #ModalWindowToGitHubButton.hide{
     opacity: 0;
-    top: -100%;
+    top: -50px;/*与高度一致*/
 }
 #ModalWindowToGitHubButton img{
     width: 100%;
@@ -123,11 +123,11 @@
     right:2em;
 
     opacity: 1;
-    transition: opacity 0.5s ,right 0.5s;
+    transition: all 777ms ease-in-out;
 }
 #ModalWindowToGitHub.hide{
     opacity: 0;
-    right:-100%;
+    right: -300px;/*与宽度一致*/
 }
 
 #ModalWindowToGitHub:not(.msg) .msgbox{
@@ -140,8 +140,8 @@
     cursor: pointer;
 
     position: absolute;
-    top: 0;
-    right: 0;
+    top: 0.3em;
+    right: 0.3em;
 
     border: none;
     background-color: transparent;
@@ -151,4 +151,8 @@
 
 #ModalWindowToGitHubButton.clear{
     opacity: 0;
+}
+#ModalWindowToGitHub .close-button svg{
+    stroke: #888;
+    fill: #888;
 }
