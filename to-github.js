@@ -190,7 +190,7 @@ svg.appendChild(line2);
         //网络错误
         if(!response.ok){
             console.log('请求数据:网络错误');
-            mwToGitHub.msgEl.innerText = `向${response.url}请求时发生了${response.status}错误    ${response.statusText}`;
+            mwToGitHub.msgEl.innerText = `${response.status}错误`;
             return;
         }
         let data = await response.json();
@@ -316,5 +316,12 @@ mwToGitHub.startButtonEl.addEventListener('contextmenu',(e)=>{e.preventDefault()
 mwToGitHub.startButtonEl.addEventListener('mousedown',(e)=>{
     if(e.button == 2){//按下控制键
         MWToGitHub.clearButton();
+    }
+});
+document.addEventListener('fullscreenchange',(e)=>{
+    if(!document.fullscreenElement){
+        mwToGitHub.startButtonEl.hidden = false;
+    }else{
+        mwToGitHub.startButtonEl.hidden = true;
     }
 });

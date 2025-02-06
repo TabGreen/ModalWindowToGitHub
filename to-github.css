@@ -104,7 +104,7 @@
     border-radius: 10px;
 
     opacity: 1;
-    transition: all 777ms ease-in-out;
+    transition: all 400ms linear;
 }
 #ModalWindowToGitHubButton:hover{
     border-color: #666;
@@ -123,7 +123,7 @@
     right:2em;
 
     opacity: 1;
-    transition: all 777ms ease-in-out;
+    transition: all 400ms linear;
 }
 #ModalWindowToGitHub.hide{
     opacity: 0;
